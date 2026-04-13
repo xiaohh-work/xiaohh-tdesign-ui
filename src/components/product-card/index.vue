@@ -76,7 +76,7 @@ export interface CardProductType {
 const props = defineProps({
   product: {
     type: Object as PropType<CardProductType>,
-    default: undefined,
+    required: true,
   },
 });
 

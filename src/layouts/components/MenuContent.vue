@@ -2,7 +2,12 @@
   <div>
     <template v-for="item in list" :key="item.path">
       <template v-if="!item.children || !item.children.length || item.meta?.single">
-        <t-menu-item v-if="getHref(item)" :name="item.path" :value="getPath(item)" @click="openHref(getHref(item)[0])">
+        <t-menu-item
+          v-if="getHrefUrl(item)"
+          :name="item.path"
+          :value="getPath(item)"
+          @click="openHref(getHrefUrl(item)!)"
+        >
           <template #icon>
             <component :is="menuIcon(item)" class="t-icon"></component>
           </template>
@@ -102,5 +107,10 @@ const getPath = (item: ListItemType) => {
 
 const openHref = (url: string) => {
   window.open(url);
+};
+
+const getHrefUrl = (item: MenuRoute) => {
+  const href = getHref(item);
+  return href ? href[0] : null;
 };
 </script>

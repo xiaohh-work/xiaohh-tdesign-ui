@@ -171,11 +171,11 @@ const onSubmit = (ctx: SubmitContext) => {
   }
 };
 const beforeUpload = (file: UploadFile) => {
-  if (!/\.pdf$/.test(file.name)) {
+  if (!/\.pdf$/.test(file.name || '')) {
     MessagePlugin.warning('请上传pdf文件');
     return false;
   }
-  if (file.size > 60 * 1024 * 1024) {
+  if ((file.size || 0) > 60 * 1024 * 1024) {
     MessagePlugin.warning('上传文件不能大于60M');
     return false;
   }

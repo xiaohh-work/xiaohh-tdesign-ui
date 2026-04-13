@@ -101,9 +101,12 @@ export const useSettingStore = defineStore('setting', {
       }
     },
   },
-  persist: {
-    paths: [...keys(STYLE_CONFIG), 'colorList', 'chartColors'],
-  },
+  persist: [
+    {
+      key: 'setting',
+      paths: [...keys(STYLE_CONFIG), 'colorList', 'chartColors'],
+    },
+  ] as any,
 });
 
 export function getSettingStore() {

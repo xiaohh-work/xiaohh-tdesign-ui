@@ -81,7 +81,7 @@ let stokeContainer: HTMLElement;
 let stokeChart: echarts.ECharts;
 const renderStokeChart = () => {
   if (!stokeContainer) {
-    stokeContainer = document.getElementById('stokeContainer');
+    stokeContainer = document.getElementById('stokeContainer') as HTMLElement;
   }
   stokeChart = echarts.init(stokeContainer);
   stokeChart.setOption(constructInitDataset({ dateTime: LAST_7_DAYS, ...chartColors.value }));

@@ -76,12 +76,14 @@ export const useUserStore = defineStore('user', {
       this.userInfo = { ...InitUserInfo };
     },
   },
-  persist: {
-    afterRestore: () => {
-      const permissionStore = usePermissionStore();
-      permissionStore.initRoutes();
+  persist: [
+    {
+      key: 'user',
+      paths: ['token'],
+      afterRestore: () => {
+        const permissionStore = usePermissionStore();
+        permissionStore.initRoutes();
+      },
     },
-    key: 'user',
-    paths: ['token'],
-  },
+  ] as any,
 });

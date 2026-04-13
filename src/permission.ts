@@ -24,7 +24,7 @@ router.beforeEach(async (to, from, next) => {
       return;
     }
     try {
-      await userStore.getUserInfo();
+      await (userStore as any).getUserInfo();
 
       const { asyncRoutes } = permissionStore;
 
@@ -43,13 +43,13 @@ router.beforeEach(async (to, from, next) => {
           return;
         }
       }
-      if (router.hasRoute(to.name)) {
+      if (router.hasRoute(to.name as any)) {
         next();
       } else {
         next(`/`);
       }
-    } catch (error) {
-      MessagePlugin.error(error.message);
+    } catch (error: any) {
+      MessagePlugin.error((error as any)?.message || '未知错误');
       next({
         path: '/login',
         query: { redirect: encodeURIComponent(to.fullPath) },
@@ -75,7 +75,7 @@ router.afterEach((to) => {
     const userStore = useUserStore();
     const permissionStore = getPermissionStore();
 
-    userStore.logout();
+    (userStore as any).logout();
     permissionStore.restoreRoutes();
   }
   NProgress.done();

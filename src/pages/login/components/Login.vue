@@ -124,7 +124,7 @@ const route = useRoute();
  * 发送验证码
  */
 const sendCode = () => {
-  form.value.validate({ fields: ['phone'] }).then((e) => {
+  form.value?.validate({ fields: ['phone'] }).then((e) => {
     if (e === true) {
       handleCounter();
     }
@@ -134,15 +134,15 @@ const sendCode = () => {
 const onSubmit = async (ctx: SubmitContext) => {
   if (ctx.validateResult === true) {
     try {
-      await userStore.login(formData.value);
+      await (userStore as any).login(formData.value);
 
       MessagePlugin.success('登录成功');
       const redirect = route.query.redirect as string;
       const redirectUrl = redirect ? decodeURIComponent(redirect) : '/dashboard';
       router.push(redirectUrl);
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
-      MessagePlugin.error(e.message);
+      MessagePlugin.error(e?.message || '登录失败');
     }
   }
 };

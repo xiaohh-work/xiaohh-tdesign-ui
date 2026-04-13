@@ -108,7 +108,7 @@ defineOptions({
 
 echarts.use([GridComponent, TooltipComponent, LineChart, CanvasRenderer, LegendComponent]);
 
-let lineContainer: HTMLElement;
+let lineContainer: HTMLElement | null;
 let lineChart: echarts.ECharts;
 const store = useSettingStore();
 const chartColors = computed(() => store.chartColors);
@@ -123,21 +123,21 @@ const onLineChange = (value: DateRangeValue) => {
 };
 
 const initChart = () => {
-  lineContainer = document.getElementById('lineContainer');
+  lineContainer = document.getElementById('lineContainer') as HTMLElement;
+  if (!lineContainer) {
+    return;
+  }
   lineChart = echarts.init(lineContainer);
   lineChart.setOption({
-    grid: {
-      x: 30, // 默认是80px
-      y: 30, // 默认是60px
-      x2: 10, // 默认80px
-      y2: 30, // 默认60px
-    },
     ...getFolderLineDataSet({ ...chartColors.value }),
   });
 };
 
 const updateContainer = () => {
-  lineChart?.resize({
+  if (!lineContainer || !lineChart) {
+    return;
+  }
+  lineChart.resize({
     width: lineContainer.clientWidth,
     height: lineContainer.clientHeight,
   });

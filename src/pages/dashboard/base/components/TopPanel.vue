@@ -104,7 +104,7 @@ let moneyContainer: HTMLElement;
 let moneyChart: echarts.ECharts;
 const renderMoneyChart = () => {
   if (!moneyContainer) {
-    moneyContainer = document.getElementById('moneyContainer');
+    moneyContainer = document.getElementById('moneyContainer') as HTMLElement;
   }
   moneyChart = echarts.init(moneyContainer);
   moneyChart.setOption(constructInitDashboardDataset('line'));
@@ -115,7 +115,7 @@ let refundContainer: HTMLElement;
 let refundChart: echarts.ECharts;
 const renderRefundChart = () => {
   if (!refundContainer) {
-    refundContainer = document.getElementById('refundContainer');
+    refundContainer = document.getElementById('refundContainer') as HTMLElement;
   }
   refundChart = echarts.init(refundContainer);
   refundChart.setOption(constructInitDashboardDataset('bar'));

@@ -1,7 +1,7 @@
 <template>
   <div :class="prefixCls" :style="getWrapStyle">
     <t-loading :loading="loading" size="large" :style="getWrapStyle">
-      <iframe ref="frameRef" :src="frameSrc" :class="`${prefixCls}__main`" @load="hideLoading"></iframe>
+      <iframe ref="frameRef" :src="frameSrc || ''" :class="`${prefixCls}__main`" @load="hideLoading"></iframe>
     </t-loading>
   </div>
 </template>
@@ -14,12 +14,9 @@ import { computed, ref, unref, watch } from 'vue';
 import { prefix } from '@/config/global';
 import { useSettingStore } from '@/store';
 
-defineProps({
-  frameSrc: {
-    type: String,
-    default: '',
-  },
-});
+defineProps<{
+  frameSrc?: string;
+}>();
 
 const { width, height } = useWindowSize();
 
@@ -39,7 +36,10 @@ const computedStyle = getComputedStyle(document.documentElement);
 const sizeXxxl = computedStyle.getPropertyValue('--td-comp-size-xxxl');
 const paddingTBXxl = computedStyle.getPropertyValue('--td-comp-paddingTB-xxl');
 
-function getOuterHeight(dom: Element) {
+function getOuterHeight(dom: Element | null) {
+  if (!dom) {
+    return 0;
+  }
   let height = dom.clientHeight;
   const computedStyle = window.getComputedStyle(dom);
   height += Number.parseInt(computedStyle.marginTop, 10);

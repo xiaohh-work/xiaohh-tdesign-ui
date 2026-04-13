@@ -49,10 +49,12 @@ export default ({ mode }: ConfigEnv): UserConfig => {
               return id.split('node_modules/')[1].split('/')[0];
             } else if (id.endsWith('.svg')) {
               // 如果是 svg 文件打包成 js 文件，则每个 svg 文件单独一个 js 文件
-              return id
-                .split('/')
-                .pop()
-                .replace(/\.svg$/i, '');
+              return (
+                id
+                  .split('/')
+                  .pop()
+                  ?.replace(/\.svg$/i, '') || ''
+              );
             }
           },
         },

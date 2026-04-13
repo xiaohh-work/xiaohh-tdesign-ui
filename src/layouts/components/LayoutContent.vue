@@ -92,8 +92,10 @@ const activeTabPath = ref('');
 
 const handleChangeCurrentTab = (path: string) => {
   const { tabRouters } = tabsRouterStore;
-  const route = tabRouters.find((i) => i.path === path);
-  router.push({ path, query: route.query });
+  const foundRoute = tabRouters.find((i) => i.path === path);
+  if (foundRoute) {
+    router.push({ path, query: foundRoute.query || route?.query });
+  }
 };
 
 const handleRemove = (options: TTabRemoveOptions) => {
@@ -111,7 +113,7 @@ const handleRefresh = (route: TRouterInfo, routeIdx: number) => {
     tabsRouterStore.toggleTabRouterAlive(routeIdx);
     router.replace({ path: route.path, query: route.query });
   });
-  activeTabPath.value = null;
+  activeTabPath.value = '';
 };
 const handleCloseAhead = (path: string, routeIdx: number) => {
   tabsRouterStore.subtractTabRouterAhead({ path, routeIdx });
@@ -147,10 +149,10 @@ const handleOperationEffect = (type: 'other' | 'ahead' | 'behind', routeIndex: n
     router.push({ path: nextRouter.path, query: nextRouter.query });
   }
 
-  activeTabPath.value = null;
+  activeTabPath.value = '';
 };
 const handleTabMenuClick = (visible: boolean, ctx: PopupVisibleChangeContext, path: string) => {
-  if (ctx.trigger === 'document') activeTabPath.value = null;
+  if (ctx.trigger === 'document') activeTabPath.value = '';
   if (visible) activeTabPath.value = path;
 };
 

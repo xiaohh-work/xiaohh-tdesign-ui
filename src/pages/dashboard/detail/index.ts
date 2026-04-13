@@ -16,9 +16,9 @@ export function getScatterDataSet({
   borderColor,
 }: { dateTime?: Array<string> } & TChartColor) {
   const divideNum = 40;
-  const timeArray = [];
-  const inArray = [];
-  const outArray = [];
+  const timeArray: string[] = [];
+  const inArray: number[] = [];
+  const outArray: number[] = [];
   for (let i = 0; i < divideNum; i++) {
     // const [timeArray, inArray, outArray] = dataset;
     if (dateTime.length > 0) {
@@ -33,8 +33,8 @@ export function getScatterDataSet({
       );
     }
 
-    inArray.push(getRandomArray().toString());
-    outArray.push(getRandomArray().toString());
+    inArray.push(getRandomArray());
+    outArray.push(getRandomArray());
   }
 
   return {

@@ -96,9 +96,9 @@ export function constructInitDataset({
   borderColor,
 }: { dateTime: Array<string> } & TChartColor) {
   const divideNum = 10;
-  const timeArray = [];
-  const inArray = [];
-  const outArray = [];
+  const timeArray: string[] = [];
+  const inArray: number[] = [];
+  const outArray: number[] = [];
   for (let i = 0; i < divideNum; i++) {
     if (dateTime.length > 0) {
       const dateAbsTime: number = (new Date(dateTime[1]).getTime() - new Date(dateTime[0]).getTime()) / divideNum;
@@ -112,8 +112,8 @@ export function constructInitDataset({
       );
     }
 
-    inArray.push(getRandomArray().toString());
-    outArray.push(getRandomArray().toString());
+    inArray.push(getRandomArray());
+    outArray.push(getRandomArray());
   }
 
   const dataset = {
@@ -195,9 +195,9 @@ export function getLineChartDataSet({
   borderColor,
 }: { dateTime?: Array<string> } & TChartColor) {
   const divideNum = 10;
-  const timeArray = [];
-  const inArray = [];
-  const outArray = [];
+  const timeArray: string[] = [];
+  const inArray: number[] = [];
+  const outArray: number[] = [];
   for (let i = 0; i < divideNum; i++) {
     if (dateTime.length > 0) {
       const dateAbsTime: number = (new Date(dateTime[1]).getTime() - new Date(dateTime[0]).getTime()) / divideNum;
@@ -212,8 +212,8 @@ export function getLineChartDataSet({
       );
     }
 
-    inArray.push(getRandomArray().toString());
-    outArray.push(getRandomArray().toString());
+    inArray.push(getRandomArray());
+    outArray.push(getRandomArray());
   }
 
   const dataSet = {
@@ -315,7 +315,7 @@ export function getPieChartDataSet({
     tooltip: {
       show: false,
       trigger: 'axis',
-      position: null,
+      position: undefined,
     },
     grid: {
       top: '0',

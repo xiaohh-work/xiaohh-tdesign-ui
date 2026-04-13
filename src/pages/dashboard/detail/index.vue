@@ -87,7 +87,7 @@ const chartColors = computed(() => store.chartColors);
 let lineContainer: HTMLElement;
 let lineChart: echarts.ECharts;
 const renderLineChart = () => {
-  lineContainer = document.getElementById('lineContainer');
+  lineContainer = document.getElementById('lineContainer') as HTMLElement;
   lineChart = echarts.init(lineContainer);
   lineChart.setOption(getFolderLineDataSet({ ...chartColors.value }));
 };
@@ -96,7 +96,7 @@ const renderLineChart = () => {
 let scatterContainer: HTMLElement;
 let scatterChart: echarts.ECharts;
 const renderScatterChart = () => {
-  scatterContainer = document.getElementById('scatterContainer');
+  scatterContainer = document.getElementById('scatterContainer') as HTMLElement;
   scatterChart = echarts.init(scatterContainer);
   scatterChart.setOption(getScatterDataSet({ ...chartColors.value }));
 };

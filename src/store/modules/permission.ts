@@ -9,10 +9,10 @@ import { transformObjectToRoute } from '@/utils/route';
 
 export const usePermissionStore = defineStore('permission', {
   state: () => ({
-    whiteListRouters: ['/login'],
-    routers: [],
-    removeRoutes: [],
-    asyncRoutes: [],
+    whiteListRouters: ['/login'] as string[],
+    routers: [] as RouteRecordRaw[],
+    removeRoutes: [] as RouteRecordRaw[],
+    asyncRoutes: [] as RouteRecordRaw[],
   }),
   actions: {
     async initRoutes() {
@@ -33,7 +33,7 @@ export const usePermissionStore = defineStore('permission', {
         await this.initRoutes();
         return this.asyncRoutes;
       } catch (error) {
-        throw new Error("Can't build routes", error);
+        throw new Error(`Can't build routes: ${error}`);
       }
     },
     async restoreRoutes() {

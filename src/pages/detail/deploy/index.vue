@@ -79,6 +79,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { getProjectList } from '@/api/detail';
+import type { ProjectInfo } from '@/api/model/detailModel';
 import { useSettingStore } from '@/store';
 import { changeChartsTheme } from '@/utils/color';
 
@@ -136,7 +137,7 @@ echarts.use([
 const store = useSettingStore();
 
 const chartColors = computed(() => store.chartColors);
-const data = ref([]);
+const data = ref<ProjectInfo[]>([]);
 const pagination = ref({
   defaultPageSize: 10,
   total: 100,
@@ -161,7 +162,7 @@ const visible = ref(false);
 let monitorContainer: HTMLElement;
 let monitorChart: echarts.ECharts;
 onMounted(() => {
-  monitorContainer = document.getElementById('monitorContainer');
+  monitorContainer = document.getElementById('monitorContainer') as HTMLElement;
   monitorChart = echarts.init(monitorContainer);
   monitorChart.setOption(getSmoothLineDataSet({ ...chartColors.value }));
   setInterval(() => {
@@ -173,7 +174,7 @@ onMounted(() => {
 let dataContainer: HTMLElement;
 let dataChart: echarts.ECharts;
 onMounted(() => {
-  dataContainer = document.getElementById('dataContainer');
+  dataContainer = document.getElementById('dataContainer') as HTMLElement;
   dataChart = echarts.init(dataContainer);
   dataChart.setOption(get2ColBarChartDataSet({ ...chartColors.value }));
 });

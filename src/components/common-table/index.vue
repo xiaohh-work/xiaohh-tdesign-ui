@@ -115,7 +115,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { getList } from '@/api/list';
-import Trend from '@/components/trend/index.vue';
+import type { ListModel } from '@/api/model/listModel';
 import { prefix } from '@/config/global';
 import { CONTRACT_PAYMENT_TYPES, CONTRACT_STATUS, CONTRACT_TYPES } from '@/constants';
 import { useSettingStore } from '@/store';
@@ -204,7 +204,7 @@ const pagination = ref({
 });
 const confirmVisible = ref(false);
 
-const data = ref([]);
+const data = ref<ListModel[]>([]);
 
 const dataLoading = ref(false);
 const fetchData = async () => {
