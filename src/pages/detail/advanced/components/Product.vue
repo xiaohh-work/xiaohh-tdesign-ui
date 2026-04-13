@@ -37,16 +37,12 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  props: {
-    data: {
-      type: Object,
-      default: () => {
-        return {};
-      },
+<script setup lang="ts">
+defineProps({
+  data: {
+    type: Object,
+    default: () => {
+      return {};
     },
   },
 });
