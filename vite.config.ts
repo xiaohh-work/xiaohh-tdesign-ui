@@ -21,6 +21,44 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       },
     },
 
+    build: {
+      rollupOptions: {
+        // [name]
+        output: {
+          // 代码块文件名
+          chunkFileNames: 'assets/js/xiaohh-[hash].js',
+          // 入口文件名
+          entryFileNames: 'assets/xiaohh-[hash].js',
+          assetFileNames(assetInfo) {
+            // 文件名
+            const fileName = assetInfo.names[0];
+            if (fileName.endsWith('.svg') || fileName.endsWith('.png') || fileName.endsWith('.jpg')) {
+              // 判断如果是 svg, png, jpg 等图片文件，则放入 assets/img 文件夹当中
+              return 'assets/img/xiaohh-[hash].[ext]';
+            } else if (fileName.endsWith('.css')) {
+              // 如果是 css 文件，则放入 assets/css 文件夹当中
+              return 'assets/css/xiaohh-[hash].[ext]';
+            } else {
+              // 如果是其他文件，则直接放入 assets 文件夹当中
+              return 'assets/xiaohh-[hash].[ext]';
+            }
+          },
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              // node_modules 当中不同依赖打包成不同的文件
+              return id.split('node_modules/')[1].split('/')[0];
+            } else if (id.endsWith('.svg')) {
+              // 如果是 svg 文件打包成 js 文件，则每个 svg 文件单独一个 js 文件
+              return id
+                .split('/')
+                .pop()
+                .replace(/\.svg$/i, '');
+            }
+          },
+        },
+      },
+    },
+
     css: {
       preprocessorOptions: {
         less: {
