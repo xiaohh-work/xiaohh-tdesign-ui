@@ -8,6 +8,9 @@ npm install
 
 # 使用中国内地境内镜像源/阿里源进行安装
 npm install --registry=https://registry.npmmirror.com
+
+# 使用中国内地境内镜像源/华为源进行安装
+npm install --registry=https://mirrors.huaweicloud.com/repository/npm/
 ```
 
 ## 运行项目
