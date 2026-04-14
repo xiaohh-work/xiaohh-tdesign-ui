@@ -4,11 +4,25 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const env = import.meta.env.MODE || 'development';
 
-// 导入homepage相关固定路由
-const homepageModules = import.meta.glob('./modules/**/homepage.ts', { eager: true });
+// 导入所有模块
+const allModules = import.meta.glob('./modules/**/*.ts', { eager: true });
 
-// 导入modules非homepage相关固定路由
-const fixedModules = import.meta.glob('./modules/**/!(homepage).ts', { eager: true });
+// homepage相关固定路由
+const homepageModules: Record<string, unknown> = {};
+
+// modules非homepage相关固定路由
+const fixedModules: Record<string, unknown> = {};
+
+// 按照类型导入路由
+Object.keys(allModules).forEach((fileName: string) => {
+  if (fileName.endsWith('homepage.ts')) {
+    // 导入homepage相关固定路由;
+    homepageModules[fileName] = allModules[fileName];
+  } else {
+    // 导入modules非homepage相关固定路由
+    fixedModules[fileName] = allModules[fileName];
+  }
+});
 
 // 其他固定路由
 const defaultRouterList: Array<RouteRecordRaw> = [

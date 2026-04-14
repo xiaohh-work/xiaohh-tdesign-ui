@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 
 import { usePermissionStore } from '@/store';
 import type { UserInfo } from '@/types/interface';
@@ -8,18 +9,20 @@ const InitUserInfo: UserInfo = {
   roles: [], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
 };
 
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    token: 'main_token', // 默认token不走权限
-    userInfo: { ...InitUserInfo },
-  }),
-  getters: {
-    roles: (state) => {
-      return state.userInfo?.roles;
-    },
-  },
-  actions: {
-    async login(userInfo: Record<string, unknown>) {
+export const useUserStore = defineStore(
+  'user',
+  () => {
+    // State
+    const token = ref('main_token'); // 默认token不走权限
+    const userInfo = ref<UserInfo>({ ...InitUserInfo });
+
+    // Getters
+    const roles = computed(() => {
+      return userInfo.value?.roles;
+    });
+
+    // Actions
+    const login = async (userInfoData: Record<string, unknown>) => {
       const mockLogin = async (userInfo: Record<string, unknown>) => {
         // 登录请求流程
         console.log(`用户信息:`, userInfo);
@@ -47,16 +50,17 @@ export const useUserStore = defineStore('user', {
         };
       };
 
-      const res = await mockLogin(userInfo);
+      const res = await mockLogin(userInfoData);
       if (res.code === 200) {
-        this.token = res.data;
+        token.value = res.data;
       } else {
         throw res;
       }
-    },
-    async getUserInfo() {
-      const mockRemoteUserInfo = async (token: string) => {
-        if (token === 'main_token') {
+    };
+
+    const getUserInfo = async () => {
+      const mockRemoteUserInfo = async (tokenValue: string) => {
+        if (tokenValue === 'main_token') {
           return {
             name: 'Tencent',
             roles: ['all'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
@@ -67,23 +71,38 @@ export const useUserStore = defineStore('user', {
           roles: ['UserIndex', 'DashboardBase', 'login'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
         };
       };
-      const res = await mockRemoteUserInfo(this.token);
+      const res = await mockRemoteUserInfo(token.value);
 
-      this.userInfo = res;
-    },
-    async logout() {
-      this.token = '';
-      this.userInfo = { ...InitUserInfo };
-    },
+      userInfo.value = res;
+    };
+
+    const logout = async () => {
+      token.value = '';
+      userInfo.value = { ...InitUserInfo };
+    };
+
+    return {
+      // State
+      token,
+      userInfo,
+      // Getters
+      roles,
+      // Actions
+      login,
+      getUserInfo,
+      logout,
+    };
   },
-  persist: [
-    {
-      key: 'user',
-      paths: ['token'],
-      afterRestore: () => {
-        const permissionStore = usePermissionStore();
-        permissionStore.initRoutes();
+  {
+    persist: [
+      {
+        key: 'user',
+        paths: ['token'],
+        afterRestore: () => {
+          const permissionStore = usePermissionStore();
+          permissionStore.initRoutes?.();
+        },
       },
-    },
-  ] as any,
-});
+    ] as any,
+  },
+);

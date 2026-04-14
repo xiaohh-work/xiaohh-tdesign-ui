@@ -1,7 +1,7 @@
 // 前端 roles 控制菜单权限 通过登录后的角色对菜单就行过滤处理
 // 如果需要前端 roles 控制菜单权限 请使用此文件代码替换 permission.ts 的内容
-
 import { defineStore } from 'pinia';
+import { ref } from 'vue';
 import type { RouteRecordRaw } from 'vue-router';
 
 import router, { allRoutes } from '@/router';
@@ -28,41 +28,51 @@ function filterPermissionsRouters(routes: Array<RouteRecordRaw>, roles: Array<un
   return { accessedRouters: res, removeRoutes };
 }
 
-export const usePermissionStore = defineStore('permission', {
-  state: () => ({
-    whiteListRouters: ['/login'] as string[],
-    routers: [] as RouteRecordRaw[],
-    removeRoutes: [] as RouteRecordRaw[],
-  }),
-  actions: {
-    async initRoutes(roles: Array<unknown>) {
-      let accessedRouters: RouteRecordRaw[] = [];
+export const usePermissionStore = defineStore('permission', () => {
+  // State
+  const whiteListRouters = ref<string[]>(['/login']);
+  const routers = ref<RouteRecordRaw[]>([]);
+  const removeRoutes = ref<RouteRecordRaw[]>([]);
 
-      let removeRoutes: Array<RouteRecordRaw> = [];
-      // special token
-      if (roles.includes('all')) {
-        accessedRouters = allRoutes;
-      } else {
-        const res = filterPermissionsRouters(allRoutes, roles);
-        accessedRouters = res.accessedRouters;
-        removeRoutes = res.removeRoutes;
+  // Actions
+  const initRoutes = async (roles: Array<unknown>) => {
+    let accessedRouters: RouteRecordRaw[] = [];
+
+    let routersToRemove: Array<RouteRecordRaw> = [];
+    // special token
+    if (roles.includes('all')) {
+      accessedRouters = allRoutes;
+    } else {
+      const res = filterPermissionsRouters(allRoutes, roles);
+      accessedRouters = res.accessedRouters;
+      routersToRemove = res.removeRoutes;
+    }
+
+    routers.value = accessedRouters;
+    removeRoutes.value = routersToRemove;
+
+    routersToRemove.forEach((item: RouteRecordRaw) => {
+      if (item.name && router.hasRoute(item.name)) {
+        router.removeRoute(item.name);
       }
+    });
+  };
 
-      this.routers = accessedRouters;
-      this.removeRoutes = removeRoutes;
+  const restore = async () => {
+    removeRoutes.value.forEach((item: RouteRecordRaw) => {
+      router.addRoute(item);
+    });
+  };
 
-      removeRoutes.forEach((item: RouteRecordRaw) => {
-        if (item.name && router.hasRoute(item.name)) {
-          router.removeRoute(item.name);
-        }
-      });
-    },
-    async restore() {
-      this.removeRoutes.forEach((item: RouteRecordRaw) => {
-        router.addRoute(item);
-      });
-    },
-  },
+  return {
+    // State
+    whiteListRouters,
+    routers,
+    removeRoutes,
+    // Actions
+    initRoutes,
+    restore,
+  };
 });
 
 export function getPermissionStore() {

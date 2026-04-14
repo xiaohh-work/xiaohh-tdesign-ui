@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 
 import type { NotificationItem } from '@/types/interface';
 
@@ -43,18 +44,33 @@ const msgData = [
 
 type MsgDataType = typeof msgData;
 
-export const useNotificationStore = defineStore('notification', {
-  state: () => ({
-    msgData,
-  }),
-  getters: {
-    unreadMsg: (state) => state.msgData.filter((item: NotificationItem) => item.status),
-    readMsg: (state) => state.msgData.filter((item: NotificationItem) => !item.status),
+export const useNotificationStore = defineStore(
+  'notification',
+  () => {
+    // State
+    const notificationMsgData = ref<MsgDataType>(msgData);
+
+    // Getters
+    const unreadMsg = computed(() => notificationMsgData.value.filter((item: NotificationItem) => item.status));
+
+    const readMsg = computed(() => notificationMsgData.value.filter((item: NotificationItem) => !item.status));
+
+    // Actions
+    const setMsgData = (data: MsgDataType) => {
+      notificationMsgData.value = data;
+    };
+
+    return {
+      // State
+      msgData: notificationMsgData,
+      // Getters
+      unreadMsg,
+      readMsg,
+      // Actions
+      setMsgData,
+    };
   },
-  actions: {
-    setMsgData(data: MsgDataType) {
-      this.msgData = data;
-    },
+  {
+    persist: true,
   },
-  persist: true,
-});
+);
